@@ -88,9 +88,10 @@ interpreterSession :: Options -> IO ()
 interpreterSession opts = do r <- runInterpreter (interpreter opts)
                              case r of
                                  Left err -> printInterpreterError err
-                                 Right (e,et,val) -> do when (printType opts)
-                                                             (sayIO e >> sayIOOneLine et)
-                                                        sayIO val
+                                 Right (_,et,val) -> if printType opts then
+                                                       sayIOOneLine et
+                                                     else
+                                                       sayIO val
   where sayIOOneLine = sayIO . unwords . words
 
 mvload :: FilePath -> IO ()
